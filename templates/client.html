@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .video-background video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .header {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 5px;
+      text-align: center;
+      color: #fff;
+      font-size: 42px;
+      font-weight: bold;
+    }
+
+    .header marquee {
+      font-size: 38px;
+    }
+
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .login-form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      width: 300px;
+      margin: auto;
+    }
+
+    .login-form h2 {
+      margin-bottom: 20px;
+    }
+
+    .login-form label {
+      display: block;
+      text-align: left;
+      margin-bottom: 5px;
+    }
+
+    .login-form .form-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .login-form input[type="text"],
+    .login-form input[type="password"] {
+      
+      padding: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .login-form input[type="submit"] {
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      padding: 5px 5px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .login-form input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="video-background">
+    <video autoplay loop muted>
+      <source src="{{ url_for('static', filename='bg client.mp4') }}" type="video/mp4">
+    </video>
+  </div>
+
+  <div class="header">
+    <marquee>Welcome to our Auction Family: Where Every Bid Holds Possibilities</marquee>
+  </div>
+
+  <div class="login-container">
+    <div class="login-form">
+      <h2>Login</h2>
+      <form action="{{ url_for('login') }}" method="POST">
+        <div class="form-row">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <br><br>
+
+        <div class="form-row">
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+
+        <input type="submit" value="Login">
+        <p>Not registered yet? <a href="{{ url_for('register') }}">Register here</a></p>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

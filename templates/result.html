@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Result Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #c7f2ff, #e0c3fc);
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 20px;
+      margin: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #333;
+      color: #fff;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .marquee {
+      margin: 20px;
+      white-space: nowrap;
+      overflow: hidden;
+      animation: marquee 15s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .winner {
+      background-color: #ffdd57;
+      font-weight: bold;
+    }
+
+    .winner td {
+      border-bottom: 2px solid #333;
+    }
+
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      z-index: 9999;
+    }
+
+    .popup h2 {
+      margin-top: 0;
+    }
+
+    .popup p {
+      margin-bottom: 20px;
+    }
+
+    .popup button {
+      padding: 10px 20px;
+      border-radius: 5px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+    }
+
+    .celebration {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .celebration img {
+      width: 100px;
+      height: 100px;
+      margin: 0 10px;
+    }
+
+    @keyframes burst {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0;
+      }
+    }
+
+    .burst-effect {
+      position: relative;
+      display: inline-block;
+      animation: burst 2s linear;
+      transform-origin: center center;
+      pointer-events: none;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="marquee">
+    <h1>Bidding Results</h1>
+  </div>
+  <div id="timer-container">
+    <p>Time Remaining: <span id="timer">5:00</span></p>
+  </div>
+
+  <div class="container">
+    <div class="table-container">
+      <h2>All Bids</h2>
+      <table id="all-bids-table">
+        <thead>
+          <tr>
+            <th>Serial No.</th>
+            <th>Product Name</th>
+            <th>Client Name</th>
+            <th>Bid Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for result in results %}
+          <tr>
+            <td>{{ result.serial_no }}</td>
+            <td>{{ result.product }}</td>
+            <td>{{ result.username }}</td>
+            <td>{{ result.bid_amount }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-container">
+      <h2>Maximum Bids</h2>
+      <table id="max-bids-table">
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Client Name</th>
+            <th>Bid Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for max_bid in max_bids %}
+          <tr {% if max_bid.winner %}class="winner"{% endif %}>
+            <td>{{ max_bid.product }}</td>
+            <td>{{ max_bid.username }}</td>
+            <td>{{ max_bid.bid_amount }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Start the timer for 5 minutes
+    var timeLeft = 10; // 5 minutes in seconds
+
+    // Update the timer display
+    function updateTimer() {
+      var minutes = Math.floor(timeLeft / 60);
+      var seconds = timeLeft % 60;
+
+      // Format the time with leading zeros if needed
+      var formattedTime = ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
+
+      document.getElementById("timer").innerHTML = formattedTime;
+
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        document.getElementById("timer").innerHTML = "0:00";
+        document.title = "Result Page - Time's Up!";
+        var maxBidsTable = document.getElementById("max-bids-table");
+        var winnerName = maxBidsTable.rows[1].cells[1].textContent; // Get the client name of the winner
+        showWinnerPopup(winnerName);
+      }
+
+      timeLeft--;
+    }
+
+    // Update the data every 5 seconds
+    setInterval(updateData, 5000);
+
+    // Function to update the tables with data from the server
+    function updateData() {
+      // Make an AJAX request to fetch the updated data
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "/fetch_data", true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText);
+          updateTable("all-bids-table", data.allBids);
+          updateTable("max-bids-table", data.maxBids);
+        }
+      };
+      xhr.send();
+    }
+
+    // Function to update a table with new data
+    function updateTable(tableId, newData) {
+      var table = document.getElementById(tableId);
+      var tbody = table.getElementsByTagName("tbody")[0];
+      tbody.innerHTML = ""; // Clear existing table data
+
+      newData.forEach(function(rowData) {
+        var row = document.createElement("tr");
+
+        for (var key in rowData) {
+          if (rowData.hasOwnProperty(key)) {
+            var cell = document.createElement("td");
+            cell.textContent = rowData[key];
+            row.appendChild(cell);
+          }
+        }
+
+        tbody.appendChild(row);
+      });
+    }
+
+    // Show the winner popup
+// Show the winner popup
+function showWinnerPopup(winnerName) {
+  var popup = document.createElement("div");
+  popup.className = "popup";
+  popup.innerHTML = "<h2>Time's Up!</h2>" +
+                    "<p>The highest bidder is <strong>" + winnerName + "</strong>!</p>" +
+                    "<p>Congratulations!</p>" +
+                    "<div class='celebration'>" +
+                    "<div class='burst-effect'><img src='{{ url_for('static', filename='diwali.gif') }}' alt='Cracker'></div>" +
+                    "</div>" +
+                    "<button onclick='closePopup()'>OK</button>";
+
+  document.body.appendChild(popup);
+
+  // Remove the popup after 20 seconds
+  setTimeout(function() {
+    closePopup();
+  }, 20000);
+}
+
+
+    // Close the winner popup
+    function closePopup() {
+      var popup = document.querySelector(".popup");
+      popup.parentNode.removeChild(popup);
+    }
+
+    // Start the timer when the page loads
+    var timerInterval = setInterval(updateTimer, 1000);
+  </script>
+</body>
+</html>

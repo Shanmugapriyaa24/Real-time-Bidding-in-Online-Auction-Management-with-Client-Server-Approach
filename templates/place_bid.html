@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bidding Page</title>
+  <style>
+    body {
+      font-family: Parisienne;
+      margin: 0;
+      padding: 0;
+      background-image: url("{{ url_for('static', filename='bg.jpg') }}");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .header {
+      background-color: #333333;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; /* Align to the left */
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+    }
+
+    .header ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      font-family: Parisienne;
+      font-size: 24px;
+    }
+
+    .header ul li {
+      margin: 0 10px;
+    }
+
+    .header ul li a {
+      text-decoration: none;
+      color: #ffffff;
+    }
+
+    .header ul li a:hover {
+      color: #cccccc;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-gap: 20px;
+    }
+
+    .product-card {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .product-card img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .product-card h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .product-card p {
+      margin: 10px 0;
+      color: #888;
+    }
+
+    .product-card .btn-bid {
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .product-card .btn-bid:hover {
+      background-color: #45a049;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      max-width: 600px;
+      margin: 100px auto;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .modal-content .bid-form {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .modal-content .bid-form input[type="text"],
+    .modal-content .bid-form input[type="password"],
+    .modal-content .bid-form input[type="number"] {
+      width: 100px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .modal-content .bid-form button {
+      margin-left: 10px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .modal-content .bid-form button:hover {
+      background-color: #45a049;
+    }
+
+    .close {
+      color: #888;
+      cursor: pointer;
+      font-size: 30px;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+    }
+
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 20px;
+    }
+
+    .product-card {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      text-align: center;
+      margin-bottom: 20px;
+      max-width: 300px;
+    }
+
+    .product-card img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .product-card h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .product-card p {
+      margin: 10px 0;
+      color: #888;
+    }
+
+    .product-card .btn-bid {
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .product-card .btn-bid:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+  <img src="{{ url_for('static', filename='auction.png') }}" alt="Logo" class="logo">
+  <ul>
+    <li><a href="{{ url_for('home') }}">Home</a></li>
+    <li><a href="{{ url_for('client') }}">Clients</a></li>
+    <li><a href="{{ url_for('product') }}">Auction Listings</a></li>
+    <li><a href="{{ url_for('result') }}">Results</a></li>
+    <li><a href="{{ url_for('about_us') }}">About Us</a></li>
+    <li><a href="{{ url_for('contact_us') }}">Contact Us</a></li>
+  </ul>
+
+  </div>
+
+  <div class="container">
+    <h1>Bidding Page</h1>
+     
+
+    <div class="product-list">
+{% for product in products %}
+      <div class="product-card">
+        <img class="product-image" src="{{ url_for('static', filename=product.image) }}" alt="Product Image">
+        <h3>{{ product.name }}</h3>
+        <p><b>Description:</b> {{ product.description }}</p>
+        <h2>${{ product.price }}</h2>
+        <button class="btn-bid" onclick="showModal('{{ product.name }}')">Bid</button>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="hideModal()">&times;</span>
+      <h2 id="modal-title"></h2>
+      <div class="bid-form">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <input type="number" id="bid-amount" placeholder="Bid Amount" required>
+        <button id="btn-bid" onclick="placeBid()">Place Bid</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // Timer variables
+var timeLeft = 600; // 10 minutes in seconds
+var timerInterval;
+var timerStarted = false;
+
+// Start the timer
+function startTimer() {
+  if (!timerStarted) {
+    timerInterval = setInterval(updateTimer, 1000);
+    timerStarted = true;
+  }
+}
+    
+
+    // Update the timer display
+    function updateTimer() {
+      var minutes = Math.floor(timeLeft / 60);
+      var seconds = timeLeft % 60;
+
+      document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s";
+
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        declareWinner();
+      }
+
+      timeLeft--;
+    }
+
+  // Show the modal and start the timer
+  function showModal(title) {
+    document.getElementById("modal-title").innerHTML = title;
+    document.getElementById("modal").style.display = "block";
+    startTimer();
+  }
+
+  // Hide the modal and reset the timer
+  function hideModal() {
+    document.getElementById("modal").style.display = "none";
+    clearInterval(timerInterval);
+    timeLeft = 600; // Reset the timer to 10 minutes
+  }
+
+  // Place a bid
+  function placeBid() {
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+    var bidAmount = document.getElementById("bid-amount").value;
+    var product = document.getElementById("modal-title").innerHTML;
+
+    // Perform username and password validation
+    if (username === "" || password === "") {
+      alert("Please enter your username and password.");
+      return;
+    }
+
+    // Perform bid amount validation
+    if (bidAmount <= 0) {
+      alert("Please enter a valid bid amount.");
+      return;
+    }
+
+    // Create an XMLHttpRequest object
+    var xhr = new XMLHttpRequest();
+
+    // Configure the request
+    xhr.open("POST", "/place_bid");
+
+    // Set the request headers
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    // Define the callback function when the request completes
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        // Redirect to the results page
+        window.location.href = "{{ url_for('place_bid') }}";
+      } else {
+        alert("Failed to place bid. Please try again.");
+      }
+    };
+
+    // Prepare the request body
+    var data = "username=" + encodeURIComponent(username) +
+               "&password=" + encodeURIComponent(password) +
+               "&bid-amount=" + encodeURIComponent(bidAmount) +
+               "&product=" + encodeURIComponent(product);
+
+    // Send the request
+    xhr.send(data);
+  }
+
+  </script>
+</body>
+</html>

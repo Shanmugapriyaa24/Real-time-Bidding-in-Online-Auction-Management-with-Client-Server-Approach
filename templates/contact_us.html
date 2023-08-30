@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Contact Us</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .form-group textarea {
+      height: 150px;
+    }
+
+    .form-group input[type="submit"] {
+      background-color: #333;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .form-group input[type="submit"]:hover {
+      background-color: #555;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #fff;
+      border-top: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    footer a {
+      display: inline-block;
+      margin: 0 10px;
+      color: #000;
+      font-size: 20px;
+      text-decoration: none;
+    }
+
+    footer .fab {
+      font-size: 24px;
+    }
+    .header {
+      background-color: #333333;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; 
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+    }
+
+    .header ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      font-family: Parisienne;
+      font-size: 24px;
+    }
+
+    .header ul li {
+      margin: 0 10px;
+    }
+
+    .header ul li a {
+      text-decoration: none;
+      color: #ffffff;
+    }
+
+    .header ul li a:hover {
+      color: #cccccc;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+  <div class="header">
+    <img src="{{ url_for('static', filename='auction.png') }}" alt="Logo" class="logo">
+    <ul>
+      <li><a href="{{ url_for('home') }}">Home</a></li>
+      <li><a href="{{ url_for('client') }}">Clients</a></li>
+      <li><a href="{{ url_for('product') }}">Auction Listings</a></li>
+      <li><a href="{{ url_for('result') }}">Results</a></li>
+      <li><a href="{{ url_for('about_us') }}">About Us</a></li>
+      <li><a href="{{ url_for('contact_us') }}">Contact Us</a></li>
+    </ul>
+  </div>
+
+  <div class="container">
+    <h1>Contact Us</h1>
+    <form id="contact-form">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required></textarea>
+      </div>
+      <div class="form-group">
+        <input type="submit" value="Send Message">
+      </div>
+    </form>
+  </div>
+
+  <footer>
+    <a href="https://www.whatsapp.com"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://www.facebook.com"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+    <a href="https://www.instagram.com"><i class="fab fa-instagram"></i></a>
+    <a href="https://www.linkedin.com"><i class="fab fa-linkedin-in"></i></a>
+    <a href="mailto:example@gmail.com"><i class="fas fa-envelope"></i></a>
+  </footer>
+
+  <script>
+    const contactForm = document.getElementById('contact-form');
+    contactForm.addEventListener('submit', function(event) {
+      event.preventDefault(); 
+      alert("Thank you for your message. We'll connect with you later.");
+      contactForm.reset();
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>

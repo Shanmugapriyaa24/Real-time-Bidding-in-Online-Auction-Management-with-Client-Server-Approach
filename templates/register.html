@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .video-background video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .header {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      text-align: center;
+      color: #fff;
+      font-size: 42px;
+      font-weight: bold;
+    }
+
+    .header marquee {
+      font-size: 38px;
+    }
+
+    .register-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .register-form {
+      background-color: #fff;
+      padding: 5px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .register-form input[type="text"],
+    .register-form input[type="password"],
+    .register-form input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .register-form input[type="submit"] {
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .register-form input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    .success-message {
+      color: green;
+      margin-top: 20px;
+    }
+  </style>
+
+</head>
+<body>
+  <div class="video-background">
+    <video autoplay loop muted>
+      <source src="{{ url_for('static', filename='bg register.mp4') }}" type="video/mp4">
+    </video>
+  </div>
+
+  <div class="header">
+    <marquee>Welcome to our Registration Page</marquee>
+  </div>
+
+
+  <div class="register-container">
+    <div class="register-form">
+      <h2>Register</h2>
+      {% if message %}
+        <p class="success-message">{{ message }}</p>
+      {% endif %}
+      <form action="{{ url_for('register') }}" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <input type="submit" value="Register">
+      </form>
+    </div>
+  </div>
+</body>
+</html>

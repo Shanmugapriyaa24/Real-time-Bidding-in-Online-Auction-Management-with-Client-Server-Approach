@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Product Page</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .product {
+      border: 1px solid #ddd;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .product img {
+      max-width: 100%;
+      height: auto;
+    }
+    .product h1 {
+      font-size: 1.2em;
+      margin-top: 10px;
+    }
+    .product p {
+      margin-bottom: 10px;
+      text-align: justify;
+    }
+    .product-image {
+      height: 200px; /* Adjust the height as per your preference */
+    }
+    #background-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      object-fit: cover;
+    }
+    body {
+    color: white;
+  }
+
+  .product-details h1,
+  .product-details p,
+  .product-details h2 {
+    color: white;
+  }
+  </style>
+</head>
+<body>
+  <video id="background-video" autoplay loop muted>
+    <source src="{{ url_for('static', filename='bg client.mp4') }}" type="video/mp4">
+  </video>
+
+  <div class="container">
+    <h1 class="text-center">Product Page</h1>
+    <div class="row">
+      {% for product in products %}
+      <div class="col-md-4">
+        <div class="product">
+          <img class="product-image" src="{{ url_for('static', filename=product.image) }}" alt="Product Image">
+          <div class="product-details">
+            <h1>{{ product.name }}</h1>
+            <p><b>Description:</b> {{ product.description }}</p>
+            <h2>${{ product.price }}</h2>
+            <a href="{{ url_for('client') }}" class="btn btn-primary">Place Bid</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+</html>
