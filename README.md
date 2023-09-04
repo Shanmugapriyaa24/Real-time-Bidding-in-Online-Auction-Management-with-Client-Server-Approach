@@ -1,0 +1,2 @@
+# Real-time-Bidding-in-Online-Auction-Management-with-Client-Server-Approach
+Our Auction Management System (AMS) is a secure web-based application employing Flask in a client-server setup. It enhances auction transparency, efficiency, and security by enabling users to create, manage, and monitor auctions, as well as place bids. With data encryption and role-based access control, AMS ensures confidentiality. 
